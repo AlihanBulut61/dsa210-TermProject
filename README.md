@@ -44,79 +44,62 @@ Data will be collected programmatically (via APIs) or from official CSV sources,
 - **Holiday Data:** [Gov.tr official holiday API](https://www.resmigazete.gov.tr/) and [Nager.Date API](https://date.nager.at/).  
 - **Air Quality Data (optional):** [WAQI](https://aqicn.org/api/) or İBB environmental monitoring feeds.  
 
-All datasets will be properly cited in the final report and limited to open, non-personal data.
+All sources will be properly cited in the final repo and report. Any scraping will observe robots.txt / Terms.
 
----
+## 4) Data Collection Plan
+1. **Traffic**
+   - If an official İBB endpoint is available, request JSON/CSV and store to `data/raw/traffic/*.csv`.  
+   - If a community dataset is used (e.g., Kaggle Istanbul Traffic Index), download the CSV and document its provenance and schema.
+2. **Weather**
+   - Use MGM’s public data pages or a documented API endpoint to collect **daily** precipitation (mm), max/min temperature (°C), and wind speed. Save to `data/raw/weather/*.csv`.
+3. **Holidays & School Calendar**
+   - Import a Turkey public‑holiday calendar (CSV/ICS/API) and convert to a daily boolean indicator. For school holidays, ingest the academic calendar to mark term/break days. Save to `data/raw/calendar/*.csv`.
+4. **Air Quality (optional)**
+   - Query WAQI/İBB environmental monitoring for daily AQI/PM2.5/PM10; aggregate to daily averages. Save to `data/raw/air/*.csv`.
+5. **Versioning**
+   - Keep all raw files immutable under `data/raw/`. Create cleaned, merged, and feature‑engineered tables under `data/processed/` with scripts in `src/`.
+6. **Reproducibility**
+   - Provide `src/collect_*.py` scripts with CLI args and a `make all` or `python -m src.pipeline` entry point. Pin dependencies in `requirements.txt`.
 
-## Approach  
+## 5) Planned Methods (EDA & Inference)
+- **EDA:** seasonal/hourly/daily profiles; heatmaps by weekday×hour; distributions; missingness checks.
+- **Hypothesis tests:** two‑sample tests (rain vs no‑rain), correlation analysis, and linear models with holiday/weather dummies.
+- **Time‑series controls:** multiple regression on daily congestion with fixed effects for weekday/month, weather, holiday, and AQI controls. Robust SEs.
+- **Visualization:** clear, labeled charts; confidence intervals; reproducible notebooks.
+- **Ethics:** only aggregated, non‑personal, open data; no PII.
 
-1. **Data Collection:**  
-   - Download or request daily data from all relevant APIs and official datasets.  
-   - Store raw files in `data/raw/` and create cleaned, merged versions in `data/processed/`.  
+## 6) Deliverables & Milestones
+- **By 31 Oct 2025 (Proposal):** This README in GitHub, with an initial `requirements.txt` and skeleton folders.
+- **By 28 Nov 2025:** Raw data collected; EDA + initial hypothesis tests committed.
+- **By 02 Jan 2026:** Baseline ML model(s) for prediction (e.g., Lasso/ElasticNet/Random Forest) on daily congestion with exogenous features; cross‑validation.
+- **By 09 Jan 2026, 23:59:** Final report (notebook or article), polished visualizations, and documented code.
 
-2. **Exploratory Data Analysis (EDA):**  
-   - Visualize congestion by weekday, month, and weather condition.  
-   - Compute descriptive statistics and correlations between features.  
+## 7) Risks & Mitigations
+- **Data availability gaps:** If an official traffic history is limited, fall back to reputable mirrors (e.g., Kaggle/TomTom indices) with clear caveats.
+- **API rate limits / access:** Cache raw pulls to disk; document schemas; keep a small sample CSV in the repo to allow quick tests.
+- **Schema changes:** Use validation checks in the ETL to fail fast when columns drift.
 
-3. **Hypothesis Testing:**  
-   - Compare average congestion on rainy vs. dry days.  
-   - Compare average congestion on holidays vs. regular weekdays.  
-   - Test correlations between AQI and congestion.  
-
-4. **Modeling (Planned):**  
-   - Multiple Linear Regression using weather and holiday dummy variables.  
-   - Time-series regression with weekday and monthly fixed effects.  
-   - Evaluate using RMSE, R², and residual diagnostics.  
-
----
-
-## Anticipation  
-Expected outcome: identify the strongest external factors influencing Istanbul’s congestion and produce interpretable models that can forecast daily congestion given weather and holiday information.  
-Results will help urban authorities and commuters plan around predictable traffic fluctuations.
-
----
-
-## Types of Analysis to Be Performed  
-
-- **Univariate Analysis:**  
-  - Distribution of daily congestion, temperature, AQI, and rainfall.  
-- **Bivariate Analysis:**  
-  - Correlation between congestion and weather/holiday indicators.  
-- **Regression Analysis:**  
-  - Linear and multiple regression models to test hypotheses.  
-- **Time Series Analysis:**  
-  - Trend and seasonality checks; weekday and monthly effects.  
-
----
-
-## Analysis Summary & Expected Results  
-
-| Factor | Expected Relationship | Hypothesis |
-|---------|----------------------|-------------|
-| Rain (mm) | Positive correlation | Rain increases congestion |
-| Temperature (°C) | Moderate positive | Warm days slightly increase traffic |
-| Public Holiday | Negative effect | Holidays reduce congestion |
-| School Holiday | Negative effect | Less morning traffic |
-| AQI (Air Quality Index) | Positive correlation | Poor air quality coincides with high traffic |
-
-> **Comment:**  
-> The analysis will aim to confirm these expectations through hypothesis testing and model evaluation once data is collected.
-
----
-
-## Visual Insights (Planned)  
-- **Heatmaps:** Congestion by weekday × hour.  
-- **Scatterplots:** Congestion vs. temperature, rainfall, and AQI.  
-- **Boxplots:** Comparing congestion on holidays vs. weekdays.  
-- **Regression Fit Lines:** Visualizing model predictions and residuals.
-
----
-
-## Conclusion  
-This project will quantify how environmental and temporal variables affect Istanbul’s daily traffic congestion.   
-- A clear research question and motivation,  
-- Multiple open data sources, and  
-- A concrete data collection and analysis plan.
+## 8) Repository Structure (initial)
+```
+.
+├── README.md
+├── requirements.txt
+├── src/
+│   ├── collect_traffic.py           # placeholder
+│   ├── collect_weather.py           # placeholder
+│   ├── collect_holidays.py          # placeholder
+│   ├── collect_air_quality.py       # optional
+│   ├── merge_build_features.py      # placeholder
+│   └── utils.py                     # placeholder
+├── notebooks/
+│   └── 00_eda.ipynb                 # to be added
+└── data/
+    ├── raw/                         # do not commit large files
+    └── processed/
+```
+## 9) Reproducibility
+- Python ≥ 3.10; `pip install -r requirements.txt`
+- A `.env` (not committed) may store API keys if needed (e.g., WAQI token).
 
 ---
 
