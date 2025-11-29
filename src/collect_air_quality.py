@@ -1,1 +1,0 @@
-# optional placeholder for air quality data collection
