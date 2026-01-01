@@ -167,18 +167,37 @@ Across the evaluated models, **Random Forest** achieved the best predictive perf
 .
 ├── README.md
 ├── requirements.txt
-├── src/
-│   ├── collect_traffic.py           # placeholder
-│   ├── collect_weather.py           # placeholder
-│   ├── collect_holidays.py          # placeholder
-│   ├── collect_air_quality.py       # optional
-│   ├── merge_build_features.py      # placeholder
-│   └── utils.py                     # placeholder
-├── notebooks/
-│   └── 00_eda.ipynb                 # to be added
-└── data/
-    ├── raw/                         # do not commit large files
-    └── processed/
+├── eda.py                       # Exploratory Data Analysis & hypothesis tests
+├── ml.py                        # Machine Learning models and evaluation
+├── output.txt                   # Console outputs from EDA & ML runs
+├── data/
+│   ├── raw/                     # Raw datasets
+│   │   ├── air.csv              # Air quality data (AQI, PM2.5, PM10)
+│   │   ├── holidays.csv         # Public & school holiday indicators
+│   │   ├── traffic.csv          # Daily traffic congestion index
+│   │   └── weather.csv          # Daily weather data
+│   └── processed/
+│       └── merged_daily_data.csv   # Cleaned and merged dataset used for EDA & ML
+├── figures/
+│   ├── correlation_heatmap.png
+│   ├── dist_congestion_index.png
+│   ├── dist_pm10.png
+│   ├── dist_pm25.png
+│   ├── dist_precipitation.png
+│   ├── dist_precipitation_loglog.png
+│   ├── dist_temperature.png
+│   ├── dist_wind_speed.png
+│   ├── time_air_pollution.png
+│   ├── time_temperature.png
+│   ├── time_traffic_congestion.png
+│   ├── ml_pred_vs_actual.png    # ML predictions vs actual values
+│   └── ml_residuals.png         # Residual analysis plot
+├── models/
+│   └── best_model.joblib        # Trained best-performing ML model
+└── outputs/
+    ├── best_model_metrics.csv   # Test-set performance of the best model
+    ├── cv_model_comparison.csv  # Cross-validation comparison of models
+    └── test_predictions.csv     # Actual vs predicted congestion values
 ```
 ## 9) Reproducibility
 - Python ≥ 3.10; `pip install -r requirements.txt`
