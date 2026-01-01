@@ -1,0 +1,2 @@
+best_model,test_mae,test_rmse,test_r2
+RandomForest,2.8496917808219173,3.4960502052561018,0.44323160480279367
