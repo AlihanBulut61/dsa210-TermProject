@@ -73,6 +73,89 @@ All sources will be properly cited in the final repo and report. Any scraping wi
 - **By 28 Nov 2025:** Raw data collected; EDA + initial hypothesis tests committed.
 - **By 02 Jan 2026:** Baseline ML model(s) for prediction.
 - **By 09 Jan 2026, 23:59:** Final report (notebook or article), polished visualizations, and documented code.
+## Phase 3 — Machine Learning Modeling & Results
+
+### Types of Analysis Performed
+
+**Feature Engineering & Preprocessing:**  
+The merged daily dataset was prepared for modeling using a time-aware setup (date sorting) and a set of numeric predictors derived from weather / air quality / holiday indicators and basic calendar features.
+
+**Modeling (Supervised Regression):**  
+Multiple regression models were trained to predict **`congestion_index`** and compared using cross-validation:
+- Linear Regression
+- Ridge
+- Lasso
+- Gradient Boosting
+- Random Forest
+
+**Model Evaluation:**  
+Performance was evaluated using **MAE**, **RMSE**, and **R²** on both cross-validation and a held-out test period. Residual patterns were also checked via saved diagnostic plots.
+
+> **Note:** The strongest baseline in this phase is a tree-based ensemble (Random Forest), suggesting non-linear effects and interactions in the predictors.
+
+---
+
+### Analysis Summary & Results
+
+#### Cross-Validation Model Comparison (CV)
+
+Results from `outputs/cv_model_comparison.csv`:
+
+| Model | CV RMSE | CV MAE | CV R² | Interpretation |
+|------|--------:|-------:|------:|---|
+| **Random Forest** | **4.50** | **3.49** | **0.224** | Best overall (lowest errors, positive R²) |
+| Gradient Boosting | 5.03 | 3.90 | -0.006 | Near-zero explanatory power |
+| Ridge | 6.40 | 5.14 | -0.730 | Weak fit |
+| Lasso | 6.56 | 5.27 | -0.878 | Weak fit |
+| Linear Regression | Extremely large | Extremely large | Very negative | Unstable / poor fit |
+
+**Comment:**  
+Cross-validation indicates **Random Forest** generalizes better than linear and regularized linear approaches for this dataset.
+
+---
+
+#### Best Model Test Performance
+
+Best model from `outputs/best_model_metrics.csv`:
+
+- **Best model:** RandomForest  
+- **Test MAE:** **2.850**  
+- **Test RMSE:** **3.496**  
+- **Test R²:** **0.443**
+
+This means the final model explains approximately **44%** of the variance in daily congestion on the test set, with an average absolute error of about **2.85** congestion-index points.
+
+---
+
+#### Prediction Behavior on the Test Period (from `outputs/test_predictions.csv`)
+
+A quick diagnostic summary of prediction errors on the provided test set:
+- **Mean error (bias):** **+2.095** → model tends to **overpredict** congestion slightly overall  
+- **Median absolute error:** **2.572**  
+- **% predictions within ±3 points:** **57.5%**  
+- **% predictions within ±5 points:** **80.8%**  
+- **Largest underprediction:** **-3.27** (2023-11-0303)  
+- **Largest overprediction:** **+7.59** (2023-12-27)
+
+**Interpretation:**  
+The model tracks typical congestion levels reasonably well, but it can miss some low-congestion days (e.g., sudden drops), which increases error peaks.
+
+---
+
+### Saved Outputs
+
+- `models/best_model.joblib` — serialized best model  
+- `outputs/cv_model_comparison.csv` — cross-validation comparison table  
+- `outputs/best_model_metrics.csv` — final test metrics  
+- `outputs/test_predictions.csv` — day-level test predictions  
+- `figures/ml_pred_vs_actual.png` — predicted vs actual plot  
+- `figures/ml_residuals.png` — residual diagnostics
+
+---
+
+### Conclusion
+
+Across the evaluated models, **Random Forest** achieved the best predictive performance with **Test R² = 0.443** and **RMSE = 3.496**, outperforming linear and regularized regression baselines. Overall, the results suggest that daily congestion patterns are partially predictable from the available external factors, while some abrupt regime changes (especially low-congestion days) remain harder to capture within this feature set.
 
 ## 7) Risks & Mitigations
 - **Data availability gaps:** If an official traffic history is limited, fall back to reputable mirrors (e.g., Kaggle/TomTom indices) with clear caveats.
