@@ -155,7 +155,7 @@ The model tracks typical congestion levels reasonably well, but it can miss some
 
 ### Conclusion
 
-Across the evaluated models, **Random Forest** achieved the best predictive performance with **Test R² = 0.443** and **RMSE = 3.496**, outperforming linear and regularized regression baselines. Overall, the results suggest that daily congestion patterns are partially predictable from the available external factors, while some abrupt regime changes (especially low-congestion days) remain harder to capture within this feature set.
+Across the evaluated models, **Random Forest** achieved the best predictive performance with **Test R² = 0.443** and **RMSE = 3.496**, outperforming linear and regularized regression baselines. Overall, the results suggest that daily congestion patterns are partially predictable from the available external factors, while some sudden regime changes (especially low-congestion days) remain harder to capture within this feature set.
 
 ## 7) Risks & Mitigations
 - **Data availability gaps:** If an official traffic history is limited, fall back to reputable mirrors (e.g., Kaggle/TomTom indices) with clear caveats.
