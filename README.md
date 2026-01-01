@@ -71,7 +71,7 @@ All sources will be properly cited in the final repo and report. Any scraping wi
 ## 6) Deliverables & Milestones
 - **By 31 Oct 2025 (Proposal):** This README in GitHub, with an initial `requirements.txt` and skeleton folders.
 - **By 28 Nov 2025:** Raw data collected; EDA + initial hypothesis tests committed.
-- **By 02 Jan 2026:** Baseline ML model(s) for prediction (e.g., Lasso/ElasticNet/Random Forest) on daily congestion with exogenous features; cross‑validation.
+- **By 02 Jan 2026:** Baseline ML model(s) for prediction.
 - **By 09 Jan 2026, 23:59:** Final report (notebook or article), polished visualizations, and documented code.
 
 ## 7) Risks & Mitigations
